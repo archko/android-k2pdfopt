@@ -48,9 +48,6 @@ public class TestActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        StatusBarHelper.hideSystemUI(this);
-        StatusBarHelper.setImmerseBarAppearance(getWindow(), true);
-
         setContentView(R.layout.activity_main);
         findViewById(R.id.btn).setOnClickListener(v -> launchPicker());
         imageView = findViewById(R.id.image);
@@ -100,7 +97,7 @@ public class TestActivity extends AppCompatActivity {
             List<String> list = new ArrayList<>();
             ReflowHelper.INSTANCE.k2pdf(k2PdfOpt, BitmapFactory.decodeFile(pdfFileName),
                     1024, 2048,
-                    72,
+                    160,
                     Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/",
                     list
             );
