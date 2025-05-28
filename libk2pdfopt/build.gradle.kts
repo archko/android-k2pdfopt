@@ -1,64 +1,40 @@
-buildscript {
-    repositories {
-        mavenLocal()
-        jcenter()
-        google()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0'
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
-    }
+plugins {
+    id("com.android.library")
+    id("kotlin-android")
 }
-
-repositories {
-    mavenLocal()
-    jcenter()
-    google()
-}
-
-apply plugin: 'com.android.library'
-apply plugin: 'maven'
-apply plugin: 'signing'
-apply plugin: 'com.github.dcendents.android-maven' // 'gradle install' task
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "28.0.3"
-
-    // http://stackoverflow.com/questions/35312743/workaround-to-link-a-shared-library-in-debug-mode-with-android-studio-v2
-    defaultPublishConfig 'release'
+    namespace = "com.github.axet.libk2pdfopt"
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        minSdkVersion 9
-        targetSdkVersion 25
-        versionCode 1
-        versionName "2.50-2"
+        minSdk = libs.versions.minSdk.get().toInt()
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        externalNativeBuild {
-            cmake {
-                abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
-            }
+        ndk {
+            abiFilters += listOf("arm64-v8a")
         }
     }
-    buildTypes {
-        debug {
-            debuggable true
-            jniDebuggable true
-            minifyEnabled false
-        }
-        release {
-            minifyEnabled false
-        }
+
+    compileOptions {
+        encoding = "UTF-8"
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+
+    kotlinOptions {
+        jvmTarget = "17"
+        freeCompilerArgs += "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+    }
+
     externalNativeBuild {
         cmake {
-            path "CMakeLists.txt"
+            path = File("CMakeLists.txt")
         }
     }
+    android.ndkVersion = "26.1.10909125"
 }
 
-signing {
+/*signing {
     sign configurations.archives
 }
 
@@ -110,11 +86,7 @@ uploadArchives {
             }
         }
     }
-}
+}*/
 
 dependencies {
-    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    testImplementation 'junit:junit:4.12'
 }
