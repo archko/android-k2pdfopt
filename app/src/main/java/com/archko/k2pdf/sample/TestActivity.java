@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,10 @@ import android.provider.Settings;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.github.axet.k2pdfopt.K2PdfOpt;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -37,6 +42,7 @@ public class TestActivity extends AppCompatActivity {
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private int vWidth = 1080;
     private int vHeight = 1880;
+    private K2PdfOpt k2PdfOpt = new K2PdfOpt();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,6 +96,18 @@ public class TestActivity extends AppCompatActivity {
 
     private void displayFromUri(Uri uri) {
         pdfFileName = IntentFile.getPath(this, uri);
+        new Thread(() -> {
+            List<String> list = new ArrayList<>();
+            ReflowHelper.INSTANCE.k2pdf(k2PdfOpt, BitmapFactory.decodeFile(pdfFileName),
+                    1024, 2048,
+                    72,
+                    Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/",
+                    list
+            );
+            for (String path : list) {
+                System.out.println("path:" + path);
+            }
+        }).start();
     }
 
     public void onResult(int resultCode, Intent intent) {

@@ -1,0 +1,104 @@
+package com.archko.k2pdf.sample;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.Drawable;
+import android.os.Environment;
+import android.util.Base64;
+
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
+/**
+ * @author: archko 2019/2/21 :16:46
+ */
+public class BitmapUtils {
+
+    public static boolean saveBitmapToFile(Bitmap bitmap, String path) {
+        return saveBitmapToFile(bitmap, new File(path), Bitmap.CompressFormat.JPEG, 100);
+    }
+
+    public static boolean saveBitmapToFile(Bitmap bitmap, File file) {
+        return saveBitmapToFile(bitmap, file, Bitmap.CompressFormat.JPEG, 100);
+    }
+
+    public static boolean saveBitmapToFile(Bitmap bitmap, File file, Bitmap.CompressFormat format, int quality) {
+        if (null == bitmap) {
+            return false;
+        }
+        FileOutputStream fos = null;
+        BufferedOutputStream bos = null;
+        ByteArrayOutputStream baos = null;
+
+        try {
+            if (file.exists()) {
+                file.delete();
+            } else {
+                File parent = file.getParentFile();
+                if (!parent.exists()) {
+                    parent.mkdirs();
+                }
+                file.createNewFile();
+            }
+
+            baos = new ByteArrayOutputStream();
+            bitmap.compress(format, quality, baos);
+            byte[] byteArray = baos.toByteArray();// 字节数组输出流转换成字节数组
+            // 将字节数组写入到刚创建的图片文件中
+            fos = new FileOutputStream(file);
+            bos = new BufferedOutputStream(fos);
+            bos.write(byteArray);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            StreamUtils.closeStream(baos);
+            StreamUtils.closeStream(bos);
+            StreamUtils.closeStream(fos);
+        }
+    }
+
+    public static Bitmap base64ToBitmap(String str) {
+        try {
+            byte[] bytes = Base64.decode(str, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    static int i = 0;
+
+    public static void saveBitmapToSDCard(Bitmap bitmap) {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(Environment.getExternalStorageDirectory().getPath() + "/" + (i++) + ".jpg");
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static Bitmap drawableToBitmap(Drawable drawable) // drawable 转换成 bitmap
+    {
+        int width = drawable.getIntrinsicWidth();   // 取 drawable 的长宽
+        int height = drawable.getIntrinsicHeight();
+        Bitmap.Config config = drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888 : Bitmap.Config.RGB_565;         // 取 drawable 的颜色格式
+        Bitmap bitmap = Bitmap.createBitmap(width, height, config);     // 建立对应 bitmap
+        Canvas canvas = new Canvas(bitmap);         // 建立对应 bitmap 的画布
+        drawable.setBounds(0, 0, width, height);
+        drawable.draw(canvas);      // 把 drawable 内容画到画布中
+        return bitmap;
+    }
+
+    public static Bitmap decodeFile(File file) {
+        return BitmapFactory.decodeFile(file.getAbsolutePath());
+    }
+}
