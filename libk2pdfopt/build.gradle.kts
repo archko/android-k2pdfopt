@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.library")
-    id("kotlin-android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -31,7 +31,7 @@ android {
             path = File("CMakeLists.txt")
         }
     }
-    android.ndkVersion = "26.1.10909125"
+    android.ndkVersion = "29.0.13846066"
 }
 
 /*signing {
