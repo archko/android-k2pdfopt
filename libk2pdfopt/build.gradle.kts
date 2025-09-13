@@ -1,6 +1,25 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    id("maven-publish")
+}
+
+publishing {
+    publications {
+        register<MavenPublication>("pdfopt") {
+            groupId = "com.github.axet"
+            artifactId = "libk2pdfopt"
+            version = "0.2.0"
+            // 必须有这个 否则不会上传AAR包
+            afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
+            // 上传source，这样使用方可以看到方法注释
+            //artifact generateSourcesJar
+        }
+    }
+    repositories {
+        maven {
+        }
+    }
 }
 
 android {
@@ -33,60 +52,6 @@ android {
     }
     android.ndkVersion = "29.0.13846066"
 }
-
-/*signing {
-    sign configurations.archives
-}
-
-// http://central.sonatype.org/pages/gradle.html
-
-group = "com.github.axet"
-archivesBaseName = "libk2pdfopt"
-version = android.defaultConfig.versionName
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: prop('ossrhUsername'), password: prop('ossrhPassword'))
-            }
-
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: prop('ossrhUsername'), password: prop('ossrhPassword'))
-            }
-
-            pom.project {
-                name 'android libk2pdfopt'
-                packaging 'jar'
-                description 'android libk2pdfopt.'
-                url 'https://gitlab.com/axet/android-k2pdfopt'
-
-                scm {
-                    connection 'scm:git:https://gitlab.com/axet/android-k2pdfopt'
-                    developerConnection 'scm:git:https://gitlab.com/axet/android-k2pdfopt'
-                    url 'https://gitlab.com/axet/android-k2pdfopt'
-                }
-
-                licenses {
-                    license {
-                        name 'GNU GENERAL PUBLIC LICENSE 3+'
-                        url 'https://www.gnu.org/licenses/gpl-3.0.en.html'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id 'axet'
-                        name 'Alexey Kuznetsov'
-                        email 'axet@me.com'
-                    }
-                }
-            }
-        }
-    }
-}*/
 
 dependencies {
 }
