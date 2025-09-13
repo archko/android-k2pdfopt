@@ -7,8 +7,8 @@ plugins {
 publishing {
     publications {
         register<MavenPublication>("pdfopt") {
-            groupId = "com.github.axet"
-            artifactId = "libk2pdfopt"
+            groupId = "com.archko.reader"
+            artifactId = "k2pdfopt"
             version = "0.2.0"
             // 必须有这个 否则不会上传AAR包
             afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
