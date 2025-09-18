@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -93,17 +94,20 @@ public class TestActivity extends AppCompatActivity {
 
     private void displayFromUri(Uri uri) {
         pdfFileName = IntentFile.getPath(this, uri);
+        DisplayMetrics dm = getResources().getDisplayMetrics();
         new Thread(() -> {
+            long start = System.currentTimeMillis();
             List<String> list = new ArrayList<>();
             ReflowHelper.INSTANCE.k2pdf(k2PdfOpt, BitmapFactory.decodeFile(pdfFileName),
                     1024, 2048,
-                    160,
+                    300,
                     Environment.getExternalStorageDirectory().getAbsolutePath() + "/Download/",
                     list
             );
             for (String path : list) {
                 System.out.println("path:" + path);
             }
+            System.out.println("time:" + (System.currentTimeMillis() - start) + " dpi:" + dm.densityDpi);
         }).start();
     }
 

@@ -161,6 +161,37 @@ Java_com_github_axet_k2pdfopt_K2PdfOpt_create(JNIEnv *env, jobject thiz, jint w,
     k2settings->dst_userheight_units = UNITS_PIXELS;
     k2settings->dst_userdpi = dpi;
 
+    // 文本清晰度优化
+    k2settings->dst_sharpen = 2;        // 输出锐化（0-3，2为中等效果）
+    k2settings->contrast_max = 1.2;     // 提高对比度（1.0为默认，1.2-1.5效果更佳）
+    k2settings->dst_gamma = 0.9;        // 调整伽马值（略低于1.0增强暗部细节）
+    k2settings->dst_negative = 0;       // 禁用负片效果（确保正常黑白显示）
+
+    // 排版与边距优化
+    //k2settings->autocrop = 1;           // 启用自动裁剪边缘空白
+    //k2settings->dstmargins.top = 0.1;   // 顶部边距（英寸）
+    //k2settings->dstmargins.bottom = 0.1;// 底部边距（英寸）
+    //k2settings->dstmargins.left = 0.1;  // 左侧边距（英寸）
+    //k2settings->dstmargins.right = 0.1; // 右侧边距（英寸）
+    //k2settings->pad_left = 5;           // 左侧额外像素填充
+    //k2settings->pad_right = 5;          // 右侧额外像素填充
+
+    // 文本布局优化
+    //k2settings->text_wrap = 1;          // 保持自动换行
+    //k2settings->word_spacing = -0.05;   // 微调字间距（负值为自动优化，适合中文）
+    //k2settings->dst_fulljustify = 0;    // 禁用全对齐（避免中文间距不均）
+    //k2settings->preserve_indentation = 1;// 保留缩进（提升排版整洁度）
+
+    // 图像与渲染优化
+    //k2settings->dst_dither = 1;         // 启用抖动算法（减少色块感）
+    //k2settings->render_dpi = dpi * 2;   // 渲染分辨率加倍（提升细节，再缩放到目标DPI）
+    //k2settings->jpeg_quality = 90;      // 提高图像质量（如果包含图片）
+
+    // 页面处理
+    //k2settings->src_autostraighten = 1; // 自动校正页面倾斜
+    //k2settings->erase_vertical_lines = 1;// 去除竖线（减少干扰）
+    //k2settings->erase_horizontal_lines = 1;// 去除横线（减少干扰）
+
     masterinfo_init(masterinfo, k2settings);
 }
 

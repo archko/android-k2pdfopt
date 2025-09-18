@@ -25,6 +25,7 @@ object ReflowHelper {
         //dpi越大,时间越久,
         //count:2, dpi:272, view.w-h:720-1555, bmp.w-h:2550-2781, cos:640
         opt.create(viewWidth, viewHeight, densityDpi)
+        opt.fontSize = 2f
         opt.load(bitmap)
         /*BitmapUtils.saveBitmapToFile(
             bitmap,
